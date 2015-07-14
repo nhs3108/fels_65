@@ -22,10 +22,14 @@ class LessonsController < ApplicationController
     @time_remaining = @lesson.time_remaining
     @is_time_over = @time_remaining < 0
     @mark = @lesson.num_of_correct_ans if @is_time_over
+    @is_owner = is_owner? @lesson
   end
 
   def update
-    if @lesson.update lesson_params
+    if !is_owner? @lesson
+      flash[:danger] = t "not_permission"
+      redirect_to category_lesson_path @category, @lesson
+    elsif @lesson.update lesson_params
       respond_to do |format|
         format.html do
           flash[:success] = t("save_sucessfully").capitalize
@@ -46,6 +50,10 @@ class LessonsController < ApplicationController
 
   def set_lesson
     @lesson = Lesson.find params[:id]
+  end
+
+  def is_owner? lesson
+    current_user.id == lesson.user_id
   end
 
   def lesson_params

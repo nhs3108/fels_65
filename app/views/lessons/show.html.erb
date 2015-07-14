@@ -19,7 +19,7 @@
       <% end %>
       <div class="col-md-4 col-md-offset-4">
         <br>
-        <%= f.submit t("done"), class: "btn btn-primary" %>
+        <%= f.submit t("done"), class: "btn btn-primary" if @is_owner %>
       </div>
     <% end %>
   </div>
